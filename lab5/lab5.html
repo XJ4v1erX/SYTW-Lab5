@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@100;400;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="https://i.pinimg.com/originals/17/85/d3/1785d33da4e3ea5ef5c1f3818dc0b4f7.png">
+  <title>Laboratorio 5</title>
+
+</head>
+
+<body>
+  <script type="application/javascript">
+
+    //constantes
+    const API_URL = 'https://uvgenios.online/api/messages'
+    const primaryColor = '#8EC5FC'
+    const secondaryColor = '#E0C3FC'
+    const tertiaryColor = '#E5E6DE'
+    const colorFont = '#626267'
+    const fontFamily = 'Roboto Mono';
+
+    //creando los elementos del body
+    const pantalla = document.createElement('div')
+    const mensajes = document.createElement('div')
+    const sending = document.createElement('section')
+    const title = document.createElement('header')
+    const form = document.createElement('form')
+    const input = document.createElement('input')
+    const button = document.createElement('button')
+    const ul = document.createElement('ul')
+    const img = document.createElement('img')
+    img.src = 'https://fonts.gstatic.com/s/i/materialiconsoutlined/mail_outline/v10/24px.svg'; // URL del icono de correo
+
+    //agregando estilos al body
+    document.body.style.display = 'flex';
+    document.body.style.justifyContent = 'center';
+    document.body.style.alignItems = 'center';
+    document.body.style.flexDirection = 'column';
+    document.body.style.height = '100vh';
+    document.body.style.margin = '0';
+    document.body.style.padding = '0';
+    document.body.style.backgroundColor = primaryColor;
+    document.body.style.backgroundImage = `linear-gradient(62deg, ${primaryColor} 0%, ${secondaryColor} 100%)`;
+    document.body.style.fontFamily = fontFamily;
+    document.body.style.fontWeight = 'bold 400';
+    document.body.style.color = colorFont;
+
+    //agregando estilos al div principal
+    pantalla.style.backgroundColor = tertiaryColor
+    pantalla.style.borderRadius = '8px'
+
+    //agregando estilo al header
+    title.append('-Vapor Wave Chat-')
+    title.style.margin = '10px'
+    title.style.padding = '10px'
+    title.style.backgroundImage = `linear-gradient(62deg, ${primaryColor} 0%, ${secondaryColor} 100%)`;
+    title.style.color = colorFont
+    title.style.textAlign = 'center'
+    title.style.fontSize = '48px'
+    title.style.fontFamily = fontFamily
+    title.style.fontWeight = 'bold'
+    title.style.borderRadius = '8px'
+
+    //agregando estilos al section
+    sending.style.backgroundColor = tertiaryColor
+    sending.style.borderRadius = '8px'
+    sending.style.display = 'flex'
+    sending.style.alignItems = 'center'
+    sending.style.padding = '10px'
+
+    //agregando estilos al form
+    input.setAttribute('type', 'text')
+    input.setAttribute('maxlength', '140')//maximo de caracteres = 140
+    input.setAttribute('placeholder', ' Escribe tu mensaje')
+    input.style.fontSize = '24px'
+    input.style.fontFamily = fontFamily
+    input.style.width = '538px'
+    input.style.height = '50px'
+    input.style.border = 'none'
+    input.style.backgroundImage = `linear-gradient(62deg, ${primaryColor} 0%, ${secondaryColor} 100%)`;
+    input.style.borderRadius = '8px'
+
+    //agregando estilos al button
+    button.append(img)
+    button.style.width = '50px'
+    button.style.height = '50px'
+    button.style.border = 'none'
+    button.style.backgroundImage = `linear-gradient(62deg, ${primaryColor} 0%, ${secondaryColor} 100%)`;
+    button.style.marginLeft = '8px'
+    button.style.borderRadius = '8px'
+
+    //agregando estilos al div de los mensajes
+    form.append(input)
+    form.append(button)
+    sending.append(form)
+
+    //agregando estilos al ul
+    ul.style.width = '600px';
+    ul.style.height = '400px';
+    ul.style.overflow = 'scroll';
+    ul.style.backgroundImage = `linear-gradient(62deg, ${primaryColor} 0%, ${secondaryColor} 100%)`;
+    ul.style.padding = '0';
+    ul.style.margin = '0';
+    ul.style.listStyle = 'none';
+    ul.style.justifyContent = 'flex-start';
+
+    //agregando estilos al div de los mensajes
+    mensajes.append(ul)
+    mensajes.style.backgroundColor = 'none'
+    mensajes.style.border = 'none'
+    mensajes.style.margin = '10px'
+    mensajes.style.borderRadius = '8px'
+
+    //agregando los elementos al body
+    pantalla.append(title)
+    pantalla.append(mensajes)
+    pantalla.append(sending)
+
+    //funcion para crear los mensajes
+    const Message = (text, user) => {
+      const li = document.createElement('li')
+
+      const userSpan = document.createElement('span')
+      userSpan.style.fontWeight = 'bold'
+      userSpan.append(`${user}: `)
+      li.append(userSpan)
+
+      //revisar si el mensaje es un enlace
+      if (text.includes("http://") || text.includes("https://") || text.includes("www.")) {
+        if (text.includes(".jpg") || text.includes(".png") || text.includes(".gif") || text.includes(".jpeg")) {
+          //creacion de la iamgen
+          const image = document.createElement('img')
+          image.setAttribute('src', text)
+          image.setAttribute('width', '200px')
+          image.setAttribute('height', '200px')
+          li.append(document.createElement('br'))
+          li.append(image)
+        } else {
+          //creacion del link
+          const link = document.createElement('a')
+          link.setAttribute('href', text)
+          link.setAttribute('target', '_blank')
+          link.append(document.createElement('br'))
+          link.append(text)
+          link.append(document.createElement('br'))
+          li.append(link)
+          //creacion del preview de la pagina
+          const iframe = document.createElement('iframe')
+          iframe.setAttribute('src', text)
+          iframe.setAttribute('width', '90%')
+          iframe.setAttribute('height', '300px')
+          li.append(iframe)
+
+
+        }
+      } else {
+        li.append(text)
+      }
+
+      return li
+    }
+
+    //funcion para obtener los mensajes
+    const getMessages = async () => {
+      const response = await fetch(API_URL)
+      const messages = await response.json()
+
+      const lis = messages.map((message) => Message(message.text, message.user))
+      lis.forEach((li) => ul.append(li))
+
+      const lastMessage = document.querySelector('ul li:last-child')
+      lastMessage.scrollIntoView()
+
+    }
+
+    //funcion para enviar los mensajes
+    const postMessage = async (text) => {
+      const body = {
+        text,
+        user: 'J4V1ER'
+      }
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        body: JSON.stringify(body),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      return response
+    }
+
+    getMessages()
+
+
+
+
+    //input al apachar el boton
+    button.addEventListener('click', async (event) => {
+      event.preventDefault()
+
+      await postMessage(input.value)
+      ul.innerHTML = ""
+      input.value = ""
+      getMessages()
+
+    })
+
+    //input al apachar enter
+    input.addEventListener('keyup', async (event) => {
+      event.preventDefault()
+
+      if (event.key === 'Enter') {
+        await postMessage(input.value)
+        ul.innerHTML = ""
+        input.value = ""
+        getMessages()
+      }
+    })
+
+
+    document.body.append(pantalla)
+
+  </script>
+</body>
+
+</html>
